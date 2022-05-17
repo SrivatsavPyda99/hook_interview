@@ -60,7 +60,7 @@ intro_length = 2525
 intro_length_longer = 3500
 
 
-mixed_vocals_beginning = lowpitch_vocals_stem[:1300]+ highpitch_vocals_stem[1300:1900] + vocals_stem[1900:intro_length]
+mixed_vocals_beginning = lowpitch_vocals_stem[:1300]+ vocals_stem[1300:1900] + highpitch_vocals_stem[1900:intro_length]
 mixed_beginning = mixed_vocals_beginning.overlay(drums_stem[:intro_length])
 mixed_beginning = mixed_beginning.overlay(bass_stem[:intro_length])
 mixed_beginning = mixed_beginning.overlay(other_stem[:intro_length])
@@ -97,11 +97,16 @@ line_1_second_word = 9200
 line_1_third_word = 10000
 line_1_end = 11500 
 
-#os.system('pitchshifter -s ./input_files/vocals_2_split[ezstems.com].wav -o ./manipulated_vocal_files/vocals_pitched_up_3_4_split.wav -p 3 -b 1')
-#os.system('pitchshifter -s ./input_files/vocals_2_split[ezstems.com].wav -o ./manipulated_vocal_files/vocals_pitched_up_5_4_split.wav -p 5 -b 1')
+#os.system('pitchshifter -s ./input_files/vocals_[ezstems.com].wav -o ./manipulated_vocal_files/vocals_pitched_up_3_4_split.wav -p 3 -b 1')
+#os.system('pitchshifter -s ./input_files/vocals_[ezstems.com].wav -o ./manipulated_vocal_files/vocals_pitched_up_5_4_split.wav -p 5 -b 1')
+#os.system('pitchshifter -s ./input_files/vocals_[ezstems.com].wav -o ./manipulated_vocal_files/vocals_pitched_down_3_4_split.wav -p -3 -b 1')
+#os.system('pitchshifter -s ./input_files/vocals_[ezstems.com].wav -o ./manipulated_vocal_files/vocals_pitched_down_5_4_split.wav -p -5 -b 1')
 
 vocals_pitched_up_3_4_split = AudioSegment.from_wav("./manipulated_vocal_files/vocals_pitched_up_3_4_split.wav")
 vocals_pitched_up_5_4_split = AudioSegment.from_wav("./manipulated_vocal_files/vocals_pitched_up_5_4_split.wav")
+vocals_pitched_down_3_4_split = AudioSegment.from_wav("./manipulated_vocal_files/vocals_pitched_down_3_4_split.wav")
+vocals_pitched_down_5_4_split = AudioSegment.from_wav("./manipulated_vocal_files/vocals_pitched_down_5_4_split.wav")
+
 
 '''
 mixed_vocals_line_1 = vocals_stem[line_1_start:line_1_midbeg_start] + \
@@ -116,7 +121,7 @@ mixed_vocals_line_1 = vocals_stem[line_1_start:line_1_midbeg_start] + \
 '''
 
 mixed_vocals_line_1 = vocals_stem[line_1_start:line_1_midbeg_start] + \
-                    lowpitch_vocals_stem[line_1_midbeg_start:line_1_midbeg_end] + \
+                    vocals_pitched_down_3_4_split[line_1_midbeg_start:line_1_midbeg_end] + \
                     vocals_stem[line_1_midbeg_end:line_1_midend_start] + \
                     highpitch_vocals_stem[line_1_midend_start:line_1_midend_end] + \
                     vocals_stem[line_1_midend_end:line_1_start_effects] + \
