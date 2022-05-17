@@ -3,6 +3,7 @@ from pydub import AudioSegment
 from pydub.playback import play
 import sys
 import os
+import matchering as mg
 
 testing = True
 
@@ -121,13 +122,13 @@ mixed_vocals_line_1 = vocals_stem[line_1_start:line_1_midbeg_start] + \
 '''
 
 mixed_vocals_line_1 = vocals_stem[line_1_start:line_1_midbeg_start] + \
-                    vocals_pitched_down_3_4_split[line_1_midbeg_start:line_1_midbeg_end] + \
+                    lowpitch_vocals_stem[line_1_midbeg_start:line_1_midbeg_end].high_pass_filter(200) + \
                     vocals_stem[line_1_midbeg_end:line_1_midend_start] + \
                     highpitch_vocals_stem[line_1_midend_start:line_1_midend_end] + \
                     vocals_stem[line_1_midend_end:line_1_start_effects] + \
                     vocals_stem[line_1_start_effects:line_1_first_word] + \
-                    vocals_pitched_up_3_4_split[line_1_first_word:line_1_second_word] + \
-                    vocals_pitched_up_5_4_split[line_1_second_word:line_1_third_word] +\
+                    vocals_pitched_up_3_4_split[line_1_first_word:line_1_second_word].low_pass_filter(16000) + \
+                    vocals_pitched_up_5_4_split[line_1_second_word:line_1_third_word].low_pass_filter(19000) +\
                     vocals_stem[line_1_third_word:line_1_end]
 
 '''
@@ -138,8 +139,8 @@ mixed_vocals_line_1 = vocals_stem[line_1_start:line_1_start_effects] + \
                     vocals_stem[line_1_third_word:line_1_end]
 '''
 
-drums_stem_line_1 = drums_stem[line_1_start:line_1_start_effects] + \
-                    AudioSegment.silent(duration=line_1_third_word-line_1_start_effects) + \
+drums_stem_line_1 = drums_stem[line_1_start:line_1_first_word] + \
+                    AudioSegment.silent(duration=line_1_third_word-line_1_first_word) + \
                     drums_stem[line_1_third_word:line_1_end]
 
 
@@ -150,22 +151,88 @@ mixed_line_1 = mixed_line_1.overlay(other_stem[line_1_start:line_1_end])
 
 ### SECOND LINE ###
 
+#11500
 line_2_start = line_1_end
 
-mixed_vocals_line_2 = vocals_stem[line_2_start:]
-mixed_line_2 = mixed_vocals_line_2.overlay(drums_stem[line_2_start:])
-mixed_line_2 = mixed_line_2.overlay(bass_stem[line_2_start:])
-mixed_line_2 = mixed_line_2.overlay(other_stem[line_2_start:])
+line_2_midbeg_start = 14000
+line_2_midbeg_end = 14600
+
+line_2_midend_start = 16000
+line_2_midend_end =16500
+
+line_2_start_effects = 17800
+line_2_first_word = 18500
+line_2_second_word = 19200
+line_2_third_word = 20000
+line_2_end = 21500 
+
+
+mixed_vocals_line_2 = vocals_stem[line_2_start:line_2_midbeg_start] + \
+                    lowpitch_vocals_stem[line_2_midbeg_start:line_2_midbeg_end].high_pass_filter(200) + \
+                    vocals_stem[line_2_midbeg_end:line_2_midend_start] + \
+                    highpitch_vocals_stem[line_2_midend_start:line_2_midend_end] + \
+                    vocals_stem[line_2_midend_end:line_2_start_effects] + \
+                    vocals_stem[line_2_start_effects:line_2_first_word] + \
+                    vocals_pitched_up_3_4_split[line_2_first_word:line_2_second_word].low_pass_filter(16000) + \
+                    vocals_pitched_up_5_4_split[line_2_second_word:line_2_third_word].low_pass_filter(18000) +\
+                    vocals_stem[line_2_third_word:line_2_end]
+
+'''
+mixed_vocals_line_2 = vocals_stem[line_2_start:line_2_midbeg_start] + \
+                    vocals_pitched_down_3_4_split[line_2_midbeg_start:line_2_midbeg_end] + \
+                    vocals_stem[line_2_midbeg_end:line_2_midend_start] + \
+                    vocals_pitched_up_3_4_split[line_2_midend_start:line_2_midend_end] + \
+                    vocals_stem[line_2_midend_end:line_2_start_effects] + \
+                    vocals_pitched_up_5_4_split[line_2_start_effects:line_2_first_word] + \
+                    vocals_pitched_up_3_4_split[line_2_first_word:line_2_second_word] + \
+                    vocals_stem[line_2_second_word:line_2_third_word] +\
+                    vocals_stem[line_2_third_word:line_2_end]
+'''
+
+drums_stem_line_2 = drums_stem[line_2_start:line_2_first_word] + \
+                    AudioSegment.silent(duration=line_2_third_word-line_2_first_word) + \
+                    drums_stem[line_2_third_word:line_2_end]
+
+
+mixed_line_2 = mixed_vocals_line_2.overlay(drums_stem_line_2)
+mixed_line_2 = mixed_line_2.overlay(bass_stem[line_2_start:line_2_end])
+mixed_line_2 = mixed_line_2.overlay(other_stem[line_2_start:line_2_end])
+
+
+
+
+
 
 
 ### MIXING ###
 
-#mix = mixed_beginning + remixed_without_vocals[400:intro_length] + mixed_line_1
-mix = mixed_beginning + remixed[400:intro_length] + mixed_line_1
+
+#mix = mixed_line_2
+
+mix = mixed_beginning + remixed[400:intro_length] + mixed_line_1 + mixed_line_2
 #mix = remixed[:line_1_start] + mixed_beginning[400:] + mixed_line_1
 #mix = mixed_vocals_beginning + mixed_vocals_line_1 + mixed_vocals_line_2
 
 play(mix)
 
-mix.export("output_files/final.wav", format="wav")
+mix.export("output_files/mix.wav", format="wav")
 
+# Sending all log messages to the default print function
+# Just delete the following line to work silently
+mg.log(print)
+
+mg.process(
+    # The track you want to master
+    target="output_files/mix.wav",
+    # Some "wet" reference track
+    reference="input_files/Kanye-West-I-Wonder-_Snippet_.wav",
+    # Where and how to save your results
+    results=[
+        mg.pcm16("output_files/master_16bit.wav"),
+        mg.pcm24("output_files/master_24bit.wav"),
+    ],
+)
+
+print("playing mix")
+
+#play(AudioSegment.from_wav("output_files/master_24bit.wav"))
