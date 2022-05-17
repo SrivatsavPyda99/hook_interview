@@ -42,4 +42,5 @@ pitchshifter -s ./hook_interview/input_files/vocals_[ezstems.com].wav -o ./hook_
 ## Challenges
 
 1. Setting up environment for all libraries
-2. 
+2. Figuring out timings for effects
+3. Maintaining creative flow while taking periods of time to code
